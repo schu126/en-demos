@@ -1,22 +1,14 @@
-from flask import Flask, jsonify, request
-import os, random
-from flask_migrate import Migrate;
-from flask_cors import CORS
+from flask import Flask, jsonify, request, session
+from config import app, db
+from flask_login import LoginManager, login_manager
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-DATABASE = os.environ.get("DB_URI", f"sqlite:///{os.path.join(BASE_DIR, 'app.db')}")
-app = Flask(__name__)
-# this proved unecessary with the jsonify.headers add approach
-# cors = CORS(app, resources={r"/": {"origins": "*"}})
-# vv This was necessary to allow patch requests
-cors = CORS(app);
-app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.json.compact = False
+login_manager = LoginManager()
+login_manager.init_app(app)
 
-migrate = Migrate(app, db)
 
-db.init_app(app)
+@app.route('/')
+def root():
+    return '<h1>Welcome to en demos</h1>'
 
 
 if __name__ == "__main__":
